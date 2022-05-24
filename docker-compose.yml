@@ -1,0 +1,90 @@
+version: '3'
+
+services:
+  follow:
+    container_name: "follow-api"
+    depends_on:
+      - follow_db
+    image: ghcr.io/tombtomb/jj-follower-service:main
+    ports:
+      - 8081:8080
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${FOLLOW_DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${FOLLOW_DB_PORT}
+
+  follow_db:
+    container_name: follow_db
+    image: postgres:12
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${FOLLOW_POSTGRES_DB}
+    volumes:
+      - followdata:/var/lib/postgresql/data
+
+  post:
+    container_name: "post-api"
+    depends_on:
+      - post_db
+    image: ghcr.io/tombtomb/jj-post-service:main
+    ports:
+      - 8080:8080
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${POST_DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${POST_DB_PORT}
+
+  post_db:
+    container_name: post_db
+    image: postgres:12
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POST_POSTGRES_DB}
+    volumes:
+      - postdata:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:legacy
+    container_name: keycloak
+    depends_on:
+      - keycloak_db
+    ports:
+      - 8180:8080
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: keycloak_db
+      DB_DATABASE: ${KEYCLOAK_DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+
+  keycloak_db:
+    container_name: keycloak_db
+    image: postgres:12
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${KEYCLOAK_POSTGRES_DB}
+    volumes:
+      - keycloakdata:/var/lib/postgresql/data
+
+volumes:
+  followdata:
+    external: true
+  postdata:
+    external: true
+  keycloakdata:
+    external: true
