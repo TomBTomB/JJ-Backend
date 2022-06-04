@@ -1,7 +1,21 @@
 version: '3'
 
 services:
-  follow:
+
+  reverse-proxy:
+    container_name: "reverse-proxy"
+    image: nginx
+    depends_on:
+      - follow-api
+      - post-api
+      - keycloak
+    ports:
+      - 8084:80
+    volumes:
+      - ./nginx/static/:/usr/share/nginx/html:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+
+  follow-api:
     container_name: "follow-api"
     depends_on:
       - follow_db
@@ -27,7 +41,7 @@ services:
     volumes:
       - followdata:/var/lib/postgresql/data
 
-  post:
+  post-api:
     container_name: "post-api"
     depends_on:
       - post_db
