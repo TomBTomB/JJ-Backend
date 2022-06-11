@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  follow:
+  follow-api:
     container_name: "follow-api"
     depends_on:
       - follow_db
@@ -16,8 +16,12 @@ services:
       DB_NAME: ${FOLLOW_DB_NAME}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${FOLLOW_DB_PORT}
+      DD_API_KEY: ${DD_API_KEY}
     networks:
       - keycloak-net
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "follow-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
+
 
   follow_db:
     container_name: follow_db
@@ -28,10 +32,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${FOLLOW_POSTGRES_DB}
+      DD_API_KEY: ${DD_API_KEY}
     volumes:
       - followdata:/var/lib/postgresql/data
 
-  post:
+  post-api:
     container_name: "post-api"
     depends_on:
       - post_db
@@ -46,8 +51,12 @@ services:
       DB_NAME: ${POST_DB_NAME}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${POST_DB_PORT}
+      DD_API_KEY: ${DD_API_KEY}
     networks:
       - keycloak-net
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "post-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
+
 
   post_db:
     container_name: post_db
@@ -106,6 +115,18 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     networks:
       - keycloak-net
+
+  datadog:
+    image: datadog/agent
+    environment:
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_SITE=datadoghq.com
+      - DD_LOGS_ENABLED=true
+      - DD_APM_ENABLED=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
 
 volumes:
   followdata:
