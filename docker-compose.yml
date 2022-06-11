@@ -7,7 +7,7 @@ services:
       - follow_db
     build:
       context: .
-      dockerfile: JJ-Follower-Service/Dockerfile
+      dockerfile: ./jj-follower-service/Dockerfile
     ports:
       - 8081:8080
     environment:
@@ -42,7 +42,7 @@ services:
       - post_db
     build:
       context: .
-      dockerfile: JJ-Post-Service/Dockerfile
+      dockerfile: ./jj-post-service/Dockerfile
     ports:
       - 8082:8080
     environment:
