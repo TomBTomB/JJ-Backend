@@ -109,12 +109,19 @@ services:
     container_name: "reverse-proxy"
     image: nginx
     ports:
-      - 8084:80
+      - 80:80
+      - 443:443
     volumes:
       - ./nginx/build/:/usr/share/nginx/html:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certbot/www:/var/www/certbot/:ro
     networks:
       - keycloak-net
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
 
   datadog:
     image: datadog/agent
