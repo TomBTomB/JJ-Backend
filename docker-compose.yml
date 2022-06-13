@@ -106,7 +106,7 @@ services:
     image: ghcr.io/tombtomb/jj-frontend:develop
     ports:
       - 80:80
-      - 433:433
+      - 443:443
     environment:
       DD_API_KEY: ${DD_API_KEY}
     volumes:
