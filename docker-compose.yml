@@ -82,7 +82,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       KEYCLOAK_USER: ${KEYCLOAK_USER}
       KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
-      KEYCLOAK_FRONTEND_URL: https://jjtombtomb.ml/auth
+      KEYCLOAK_FRONTEND_URL: https://${FRONTEND_URL}.ml/auth
       PROXY_ADDRESS_FORWARDING: "true"
       KC_PROXY: passthrough
       KEYCLOAK_PROXY: passthrough
