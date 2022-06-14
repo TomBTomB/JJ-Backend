@@ -67,7 +67,7 @@ services:
       - postdata:/var/lib/postgresql/data
 
   keycloak:
-    image: quay.io/keycloak/keycloak:18.0.0
+    image: jboss/keycloak:latest
     container_name: keycloak
     depends_on:
       - keycloak_db
@@ -75,17 +75,17 @@ services:
       - 8080:8080
     environment:
       DB_VENDOR: POSTGRES
-      DB_ADDR: keycloak_db
       DB_DATABASE: ${KEYCLOAK_DB_NAME}
+      DB_ADDR: host.docker.internal
+      DB_PORT: ${KEYCLOAK_DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      KEYCLOAK_ADMIN: ${KEYCLOAK_USER}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
       KEYCLOAK_FRONTEND_URL: https://jjtombtomb.ml/auth
       PROXY_ADDRESS_FORWARDING: "true"
       KC_PROXY: passthrough
       KEYCLOAK_PROXY: passthrough
-    command: start-dev
     networks:
       - keycloak-net
 
