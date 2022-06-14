@@ -5,7 +5,7 @@ services:
     container_name: "follow-api"
     depends_on:
       - follow_db
-    image: ghcr.io/tombtomb/jj-follower-service:main
+    image: ghcr.io/tombtomb/jj-follower-service:${ENV_TAG}
     ports:
       - 8081:8080
     environment:
@@ -38,7 +38,7 @@ services:
     container_name: "post-api"
     depends_on:
       - post_db
-    image: ghcr.io/tombtomb/jj-post-service:main
+    image: ghcr.io/tombtomb/jj-post-service:${ENV_TAG}
     ports:
       - 8082:8080
     environment:
