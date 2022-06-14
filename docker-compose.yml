@@ -111,6 +111,7 @@ services:
       DD_API_KEY: ${DD_API_KEY}
     volumes:
       - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
     networks:
       - keycloak-net
     labels:
@@ -120,6 +121,7 @@ services:
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
 
   datadog:
     image: datadog/agent
