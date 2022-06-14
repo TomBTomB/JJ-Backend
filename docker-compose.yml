@@ -103,7 +103,7 @@ services:
   
   reverse-proxy:
     container_name: "reverse-proxy"
-    image: ghcr.io/tombtomb/jj-frontend:develop
+    image: ghcr.io/tombtomb/jj-frontend:${ENV_TAG}
     ports:
       - 80:80
       - 443:443
